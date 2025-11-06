@@ -1,7 +1,8 @@
-namespace OrderProcessing.Core.Interfaces;
+namespace OrderProcessing.Application.Interfaces;
 
 /// <summary>
 /// Interface for publishing messages to a message broker
+/// Application layer abstraction for asynchronous messaging
 /// </summary>
 public interface IMessagePublisher
 {

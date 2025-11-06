@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.5.2" />
     <PackageReference Include="Aspire.RabbitMQ.Client" Version="9.5.2" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -16,7 +17,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OrderProcessing.ServiceDefaults\OrderProcessing.ServiceDefaults.csproj" />
-    <ProjectReference Include="..\OrderProcessing.Core\OrderProcessing.Core.csproj" />
+    <ProjectReference Include="..\OrderProcessing.Application\OrderProcessing.Application.csproj" />
+    <ProjectReference Include="..\OrderProcessing.DataAccess\OrderProcessing.DataAccess.csproj" />
   </ItemGroup>
 
 </Project>

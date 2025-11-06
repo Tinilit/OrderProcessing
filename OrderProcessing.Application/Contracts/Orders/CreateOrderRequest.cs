@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace OrderProcessing.Core.DTO.Orders;
+namespace OrderProcessing.Application.Contracts.Orders;
 
 /// <summary>
 /// Request model for creating a new order

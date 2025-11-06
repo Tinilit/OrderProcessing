@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using OrderProcessing.Core.DTO.Orders;
-using OrderProcessing.Core.Interfaces;
+using OrderProcessing.Application.Contracts.Orders;
+using OrderProcessing.Application.Interfaces;
 
 namespace OrderProcessing.API.Controllers;
 
@@ -24,7 +24,7 @@ public class OrdersController : ControllerBase
     /// <param name="cancellationToken">Cancellation token</param>
     /// <returns>Order response with status</returns>
     [HttpPost]
-    [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(OrderResponse), StatusCodes.Status202Accepted)]
     [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<OrderResponse>> CreateOrder(
@@ -35,16 +35,14 @@ public class OrdersController : ControllerBase
         {
             _logger.LogInformation("Creating order for customer: {CustomerName}", request.CustomerName);
 
-            // Model validation is handled automatically by [ApiController] attribute
-            // If validation fails, it returns 400 Bad Request automatically
-
             var response = await _orderService.CreateOrderAsync(request, cancellationToken);
 
-            _logger.LogInformation("Order created successfully with status: {Status}", response.Status);
+            _logger.LogInformation("Order queued for processing: {OrderId}", response.Id);
 
-            return CreatedAtAction(
+            // Return 202 Accepted since order is processed asynchronously
+            return AcceptedAtAction(
                 nameof(GetOrderById),
-                new { id = Guid.NewGuid() }, // Placeholder until we add OrderId to response
+                new { id = response.Id },
                 response);
         }
         catch (Exception ex)

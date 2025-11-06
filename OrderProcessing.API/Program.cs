@@ -1,19 +1,18 @@
-using OrderProcessing.API.Services;
-using OrderProcessing.Core.Interfaces;
+using OrderProcessing.Application.Extensions;
+using OrderProcessing.DataAccess.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add RabbitMQ client
-builder.AddRabbitMQClient("messaging");
-
-// Add services to the container.
+// Add services to the container
 builder.Services.AddControllers();
 
+// Register infrastructure services (Database + Messaging)
+builder.Services.AddOrderProcessingInfrastructure(builder);
+
 // Register application services
-builder.Services.AddScoped<IOrderService, OrderService>();
-builder.Services.AddSingleton<IMessagePublisher, RabbitMqPublisher>();
+builder.Services.AddApplicationServices();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -23,7 +22,7 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

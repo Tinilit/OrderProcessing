@@ -1,12 +1,14 @@
 using System.Text;
 using System.Text.Json;
-using OrderProcessing.Core.Interfaces;
+using Microsoft.Extensions.Logging;
+using OrderProcessing.Application.Interfaces;
 using RabbitMQ.Client;
 
-namespace OrderProcessing.API.Services;
+namespace OrderProcessing.Application.Messaging;
 
 /// <summary>
 /// RabbitMQ implementation of the message publisher
+/// Application layer service for publishing messages to RabbitMQ
 /// </summary>
 public class RabbitMqPublisher : IMessagePublisher
 {

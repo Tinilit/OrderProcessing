@@ -1,21 +1,32 @@
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.DependencyInjection;
+using OrderProcessing.Application.Interfaces;
 using OrderProcessing.Core.Messages;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
 namespace OrderProcessing.Worker;
 
+/// <summary>
+/// Background service that consumes order messages from RabbitMQ
+/// Delegates message processing to the Application layer
+/// </summary>
 public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IConnection _connection;
+    private readonly IServiceScopeFactory _serviceScopeFactory;
     private IModel? _channel;
 
-    public Worker(ILogger<Worker> logger, IConnection connection)
+    public Worker(
+        ILogger<Worker> logger,
+        IConnection connection,
+        IServiceScopeFactory serviceScopeFactory)
     {
         _logger = logger;
         _connection = connection;
+        _serviceScopeFactory = serviceScopeFactory;
     }
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
@@ -37,7 +48,7 @@ public class Worker : BackgroundService
 
         // Create a consumer
         var consumer = new EventingBasicConsumer(_channel);
-        consumer.Received += (model, ea) =>
+        consumer.Received += async (model, ea) =>
         {
             try
             {
@@ -47,17 +58,12 @@ public class Worker : BackgroundService
 
                 if (message != null)
                 {
-                    _logger.LogInformation(
-                        "Processing order {OrderId} for customer {CustomerName}, Total: {TotalAmount:C}",
-                        message.OrderId,
-                        message.CustomerName,
-                        message.TotalAmount);
+                    // Create a scope for scoped services (proper DI)
+                    using var scope = _serviceScopeFactory.CreateScope();
+                    var handler = scope.ServiceProvider.GetRequiredService<IOrderMessageHandler>();
 
-                    // TODO: Implement actual order processing logic here
-                    // For example: send confirmation email, update inventory, etc.
-                    Thread.Sleep(1000); // Simulate processing
-
-                    _logger.LogInformation("Order {OrderId} processed successfully", message.OrderId);
+                    // Delegate to Application layer handler
+                    await handler.HandleAsync(message, stoppingToken);
 
                     // Acknowledge the message
                     _channel.BasicAck(deliveryTag: ea.DeliveryTag, multiple: false);

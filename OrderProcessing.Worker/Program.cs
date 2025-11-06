@@ -1,12 +1,18 @@
+using OrderProcessing.Application.Extensions;
+using OrderProcessing.DataAccess.Extensions;
 using OrderProcessing.Worker;
 
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.AddServiceDefaults();
 
-// Add RabbitMQ client
-builder.AddRabbitMQClient("messaging");
+// Register infrastructure services (Database + Messaging)
+builder.Services.AddOrderProcessingInfrastructure(builder);
 
+// Register application services (includes message handler)
+builder.Services.AddApplicationServices();
+
+// Register the worker
 builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
