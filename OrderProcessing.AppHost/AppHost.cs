@@ -10,13 +10,19 @@ var orderDb = postgres.AddDatabase("orderdb");
 var messaging = builder.AddRabbitMQ("messaging");
 
 // Add API with PostgreSQL and RabbitMQ references
+// WaitFor ensures the API doesn't start until dependencies are ready
 var api = builder.AddProject<Projects.OrderProcessing_API>("orderprocessing-api")
     .WithReference(orderDb)
-    .WithReference(messaging);
+    .WithReference(messaging)
+    .WaitFor(postgres)
+    .WaitFor(messaging);
 
 // Add Worker with PostgreSQL and RabbitMQ references
+// WaitFor ensures the Worker doesn't start until dependencies are ready
 var worker = builder.AddProject<Projects.OrderProcessing_Worker>("orderprocessing-worker")
     .WithReference(orderDb)
-    .WithReference(messaging);
+    .WithReference(messaging)
+    .WaitFor(postgres)
+    .WaitFor(messaging);
 
 builder.Build().Run();
