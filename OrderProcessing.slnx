@@ -1,6 +1,7 @@
 <Solution>
   <Project Path="OrderProcessing.API/OrderProcessing.API.csproj" />
   <Project Path="OrderProcessing.AppHost/OrderProcessing.AppHost.csproj" />
+  <Project Path="OrderProcessing.Application.Tests/OrderProcessing.Application.Tests.csproj" />
   <Project Path="OrderProcessing.Application/OrderProcessing.Application.csproj" />
   <Project Path="OrderProcessing.Core/OrderProcessing.Core.csproj" />
   <Project Path="OrderProcessing.DataAccess/OrderProcessing.DataAccess.csproj" />
