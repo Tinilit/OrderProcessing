@@ -20,6 +20,9 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// ? AUTO-APPLY DATABASE MIGRATIONS ON STARTUP
+await app.InitializeDatabaseAsync();
+
 app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline

@@ -17,4 +17,7 @@ builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
 
-host.Run();
+// ? AUTO-APPLY DATABASE MIGRATIONS ON STARTUP
+await host.InitializeDatabaseAsync();
+
+await host.RunAsync();
