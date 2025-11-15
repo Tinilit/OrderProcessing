@@ -16,7 +16,8 @@ var api = builder.AddProject<Projects.OrderProcessing_API>("orderprocessing-api"
     .WithReference(orderDb)
     .WithReference(messaging)
     .WaitFor(postgres)
-    .WaitFor(messaging);
+    .WaitFor(messaging)
+    .WithExternalHttpEndpoints();
 
 // Add Worker with PostgreSQL and RabbitMQ references
 // WaitFor ensures the Worker doesn't start until dependencies are ready
