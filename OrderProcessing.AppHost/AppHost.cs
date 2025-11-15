@@ -1,12 +1,13 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add PostgreSQL
+// Add PostgreSQL - will automatically use Azure Database for PostgreSQL when deployed to Azure
 var postgres = builder.AddPostgres("postgres")
-    .WithPgAdmin();
+    .WithPgAdmin()
+    .PublishAsAzurePostgresFlexibleServer();
 
 var orderDb = postgres.AddDatabase("orderdb");
 
-// Add RabbitMQ
+// Add RabbitMQ - will run as Container App when deployed to Azure
 var messaging = builder.AddRabbitMQ("messaging");
 
 // Add API with PostgreSQL and RabbitMQ references

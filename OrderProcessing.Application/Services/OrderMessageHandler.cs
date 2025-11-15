@@ -38,7 +38,7 @@ public class OrderMessageHandler : IOrderMessageHandler
             CustomerName = message.CustomerName,
             CustomerEmail = message.CustomerEmail,
             TotalAmount = message.TotalAmount,
-            Status = OrderStatus.Pending.ToString(),
+            Status = OrderStatus.Completed.ToString(),
             CreatedAt = message.CreatedAt,
             Items = message.Items.Select(i => new OrderItem
             {
