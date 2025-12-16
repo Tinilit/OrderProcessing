@@ -1,6 +1,6 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-// Add PostgreSQL - will automatically use Azure Database for PostgreSQL when deployed to Azure
+// Add PostgreSQL with Azure Entra ID authentication when deployed to Azure
 var postgres = builder.AddPostgres("postgres")
     .WithPgAdmin()
     .PublishAsAzurePostgresFlexibleServer();
